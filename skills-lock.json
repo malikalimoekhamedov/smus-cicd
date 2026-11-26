@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "skills": {
+    "generate-bundle-manifest": {
+      "source": "aws/CICD-for-SageMakerUnifiedStudio",
+      "ref": "main",
+      "commit": "d768153d570f39b3d68ae38ee75ec2b1124a1d9b",
+      "sourceType": "github",
+      "skillPath": "skills/generate-bundle-manifest/SKILL.md",
+      "computedHash": "bbcc482b85d2549c781e1aba62416e05401e71347341ae3fcabff3f549e90c32"
+    }
+  }
+}

@@ -1,0 +1,13 @@
+smv2-reserving:
+  dag_id: smv2-reserving
+  description: "SMV2 reserving (skeleton)"
+  schedule: null # manual trigger only
+  catchup: false
+  max_active_runs: 1
+  default_args:
+    owner: data-engineering
+    start_date: "2026-01-01"
+    retries: 0
+  tasks:
+    placeholder: # TODO: replace with real tasks
+      operator: airflow.operators.empty.EmptyOperator

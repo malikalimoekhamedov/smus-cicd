@@ -1,0 +1,13 @@
+smv2-reportingteam:
+  dag_id: smv2-reportingteam
+  description: "SMV2 reporting team (skeleton)"
+  schedule: null # manual trigger only
+  catchup: false
+  max_active_runs: 1
+  default_args:
+    owner: data-engineering
+    start_date: "2026-01-01"
+    retries: 0
+  tasks:
+    placeholder: # TODO: replace with real tasks
+      operator: airflow.operators.empty.EmptyOperator

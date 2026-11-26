@@ -1,0 +1,98 @@
+# Application manifest for the "NCMS Master Data" project.
+# Domain: Root | Domain unit: Rocket (domain units are not part of this manifest).
+# One manifest = one SMUS project. SAS Migration has its own manifest in ../sas-migration/.
+# Run the CLI from this directory.
+#
+# Skeleton: no workflows or jobs yet. When you add the first workflow, add it under
+# content.workflows and add a `workflow.create` bootstrap action to uat and prd.
+applicationName: NCMS-Master-Data
+
+content:
+  storage:
+    # Glue ETL scripts
+    - name: code
+      connectionName: default.s3_shared
+      include:
+        - "jobs/"
+      exclude:
+        - .ipynb_checkpoints/
+        - __pycache__/
+        - "*.pyc"
+        - .libs.json
+    # MWAA Serverless DAG definitions
+    - name: workflows
+      connectionName: default.s3_shared
+      append: true
+      include:
+        - "workflows/"
+      exclude:
+        - .ipynb_checkpoints/
+        - __pycache__/
+        - "*.pyc"
+        - .libs.json
+
+  # workflows:
+  #   - workflowName: <name>
+  #     connectionName: default.workflow_serverless
+
+stages:
+  # Bundle source. Real values, no bootstrap actions.
+  dev:
+    stage: DEV
+    domain:
+      name: Root
+      region: eu-central-1
+    project:
+      name: NCMS Master Data
+      role:
+        arn: arn:aws:iam::${DEV_ACCOUNT_ID}:role/TODO-ncms-master-data-dev   # TODO: stub
+    environment_variables:
+      ENVIRONMENT: dev
+    deployment_configuration:
+      storage:
+        - name: code
+          connectionName: default.s3_shared
+          targetDirectory: ncms/jobs
+        - name: workflows
+          connectionName: default.s3_shared
+          targetDirectory: ncms/workflows
+
+  uat:
+    stage: UAT
+    domain:
+      name: ${UAT_DOMAIN_NAME:Root}
+      region: ${UAT_DOMAIN_REGION:eu-central-1}
+    project:
+      name: ${UAT_PROJECT_NAME:NCMS Master Data}
+      role:
+        arn: arn:aws:iam::${UAT_ACCOUNT_ID}:role/TODO-ncms-master-data-uat   # TODO: stub
+    environment_variables:
+      ENVIRONMENT: uat
+    deployment_configuration:
+      storage:
+        - name: code
+          connectionName: default.s3_shared
+          targetDirectory: ncms/jobs
+        - name: workflows
+          connectionName: default.s3_shared
+          targetDirectory: ncms/workflows
+
+  prd:
+    stage: PRD
+    domain:
+      name: ${PRD_DOMAIN_NAME:Root}
+      region: ${PRD_DOMAIN_REGION:eu-central-1}
+    project:
+      name: ${PRD_PROJECT_NAME:NCMS Master Data}
+      role:
+        arn: arn:aws:iam::${PRD_ACCOUNT_ID}:role/TODO-ncms-master-data-prd   # TODO: stub
+    environment_variables:
+      ENVIRONMENT: prd
+    deployment_configuration:
+      storage:
+        - name: code
+          connectionName: default.s3_shared
+          targetDirectory: ncms/jobs
+        - name: workflows
+          connectionName: default.s3_shared
+          targetDirectory: ncms/workflows

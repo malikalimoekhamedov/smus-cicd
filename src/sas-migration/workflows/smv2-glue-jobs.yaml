@@ -1,0 +1,77 @@
+# Registers (create-or-update) the SMV2 Glue jobs.
+# NOTE: GlueJobOperator with update_config also STARTS the job. Tasks are fire-and-forget
+# (wait_for_completion: false) because Glue jobs can exceed the MWAA Serverless task timeout.
+# TODO: decide how these jobs are owned and registered before running against a shared project.
+smv2-glue-jobs:
+  dag_id: smv2-glue-jobs
+  description: "Creates/updates SMV2 Glue jobs"
+  schedule: null # manual trigger only
+  catchup: false
+  max_active_runs: 1
+  default_args:
+    owner: data-engineering
+    start_date: "2026-01-01"
+    retries: 0
+  tasks:
+    smv2_09_add_pp_2025:
+      operator: airflow.providers.amazon.aws.operators.glue.GlueJobOperator
+      job_name: smv2-09_add_pp_2025
+      iam_role_name: "{proj.iam_role_name}"
+      s3_bucket: "{proj.connection.default.s3_shared.bucket_name}"
+      region_name: "{domain.region}"
+      update_config: true
+      wait_for_completion: false
+      script_location: "{proj.connection.default.s3_shared.s3Uri}smv2/jobs/smv2-09_add_pp_2025.py"
+      create_job_kwargs:
+        GlueVersion: "5.0" # TODO: confirm
+        WorkerType: G.1X # TODO: size per job
+        NumberOfWorkers: 2
+        Timeout: 120 # minutes
+        MaxRetries: 0
+        Connections: # TODO: confirm connection names; add the project's network connection if required
+          Connections: [datastore_sas_reporting]
+        DefaultArguments: # TODO: extend (--extra-py-files, --TempDir, ...)
+          "--enable-glue-datacatalog": "true"
+          "--ORACLE_CONNECTION_NAME": datastore_sas_reporting
+
+    smv2_11_add_channels:
+      operator: airflow.providers.amazon.aws.operators.glue.GlueJobOperator
+      job_name: smv2-11_add_channels
+      iam_role_name: "{proj.iam_role_name}"
+      s3_bucket: "{proj.connection.default.s3_shared.bucket_name}"
+      region_name: "{domain.region}"
+      update_config: true
+      wait_for_completion: false
+      script_location: "{proj.connection.default.s3_shared.s3Uri}smv2/jobs/smv2-11_add_channels.py"
+      create_job_kwargs:
+        GlueVersion: "5.0"
+        WorkerType: G.1X
+        NumberOfWorkers: 2
+        Timeout: 120
+        MaxRetries: 0
+        Connections:
+          Connections: [datastore_sas_reporting]
+        DefaultArguments:
+          "--enable-glue-datacatalog": "true"
+          "--ORACLE_CONNECTION_NAME": datastore_sas_reporting
+
+    smv2_06_add_claims:
+      operator: airflow.providers.amazon.aws.operators.glue.GlueJobOperator
+      job_name: smv2-06_add_claims
+      iam_role_name: "{proj.iam_role_name}"
+      s3_bucket: "{proj.connection.default.s3_shared.bucket_name}"
+      region_name: "{domain.region}"
+      update_config: true
+      wait_for_completion: false
+      script_location: "{proj.connection.default.s3_shared.s3Uri}smv2/jobs/smv2-06_add_claims.py"
+      create_job_kwargs:
+        GlueVersion: "5.0"
+        WorkerType: G.1X
+        NumberOfWorkers: 2
+        Timeout: 120
+        MaxRetries: 0
+        Connections:
+          Connections: [datastore_sas_reporting]
+        DefaultArguments: # TODO: add --extra-py-files if shared libraries are needed
+          "--enable-glue-datacatalog": "true"
+          "--ORACLE_CONNECTION_NAME": datastore_sas_reporting

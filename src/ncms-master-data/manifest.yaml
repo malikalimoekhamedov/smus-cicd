@@ -45,7 +45,7 @@ stages:
     project:
       name: NCMS Master Data
       role:
-        arn: arn:aws:iam::${DEV_ACCOUNT_ID}:role/TODO-ncms-master-data-dev   # TODO: stub
+        arn: arn:aws:iam::${AWS_ACCOUNT_ID_DEV}:role/TODO-ncms-master-data-dev   # TODO: stub
     environment_variables:
       ENVIRONMENT: dev
     deployment_configuration:
@@ -65,7 +65,7 @@ stages:
     project:
       name: ${UAT_PROJECT_NAME:NCMS Master Data}
       role:
-        arn: arn:aws:iam::${UAT_ACCOUNT_ID}:role/TODO-ncms-master-data-uat   # TODO: stub
+        arn: arn:aws:iam::${AWS_ACCOUNT_ID_UAT}:role/TODO-ncms-master-data-uat   # TODO: stub
     environment_variables:
       ENVIRONMENT: uat
     deployment_configuration:
@@ -85,7 +85,7 @@ stages:
     project:
       name: ${PRD_PROJECT_NAME:NCMS Master Data}
       role:
-        arn: arn:aws:iam::${PRD_ACCOUNT_ID}:role/TODO-ncms-master-data-prd   # TODO: stub
+        arn: arn:aws:iam::${AWS_ACCOUNT_ID_PRD}:role/TODO-ncms-master-data-prd   # TODO: stub
     environment_variables:
       ENVIRONMENT: prd
     deployment_configuration:

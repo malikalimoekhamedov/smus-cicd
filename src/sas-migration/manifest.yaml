@@ -2,6 +2,9 @@
 # Domain: Root | Domain unit: Data (domain units are not part of this manifest).
 # One manifest = one SMUS project. NCMS Master Data has its own manifest in ../ncms-master-data/.
 # Run the CLI from this directory.
+#
+# Prerequisite: the Oracle connection `datastore_sas_reporting` must exist in each target project.
+# The CLI cannot create Oracle connections; it is provisioned outside this manifest (Terraform).
 applicationName: SAS-Migration
 
 content:
@@ -49,7 +52,7 @@ stages:
     project:
       name: SAS Migration
       role:
-        arn: arn:aws:iam::${DEV_ACCOUNT_ID}:role/TODO-sas-migration-dev   # TODO: stub
+        arn: arn:aws:iam::${AWS_ACCOUNT_ID_DEV}:role/TODO-sas-migration-dev # TODO: stub
     environment_variables:
       ENVIRONMENT: dev
       ORACLE_CONNECTION_NAME: datastore_sas_reporting
@@ -70,7 +73,7 @@ stages:
     project:
       name: ${UAT_PROJECT_NAME:SAS Migration}
       role:
-        arn: arn:aws:iam::${UAT_ACCOUNT_ID}:role/TODO-sas-migration-uat # TODO: stub
+        arn: arn:aws:iam::${AWS_ACCOUNT_ID_UAT}:role/TODO-sas-migration-uat # TODO: stub
     environment_variables:
       ENVIRONMENT: uat
       ORACLE_CONNECTION_NAME: datastore_sas_reporting
@@ -99,7 +102,7 @@ stages:
     project:
       name: ${PRD_PROJECT_NAME:SAS Migration}
       role:
-        arn: arn:aws:iam::${PRD_ACCOUNT_ID}:role/TODO-sas-migration-prd # TODO: stub
+        arn: arn:aws:iam::${AWS_ACCOUNT_ID_PRD}:role/TODO-sas-migration-prd # TODO: stub
     environment_variables:
       ENVIRONMENT: prd
       ORACLE_CONNECTION_NAME: datastore_sas_reporting
